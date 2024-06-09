@@ -4,15 +4,11 @@
 * Date: 05/10/2023
 * Description: This file is used to control velocity by using PI controller
 */
-
-
 #include "main.h"
 #include "string.h"
 #include "stdio.h" 
 #include "stdlib.h"
 #include "stdbool.h"
-
-
 
 #define pi 3.1415
 #define p2r pi/1000
@@ -66,7 +62,7 @@ struct __FILE
   /* standard output using printf() for debugging, no file handling */
   /* is required. */
 };
-/* FILE is typedef’d in stdio.h. */
+/* FILE is typedefâ€™d in stdio.h. */
 FILE __stdout;
 int fputc(int ch, FILE *f) 
 {
@@ -104,25 +100,22 @@ void PIcontrol(void){
 	 }
 	 //ham run dong co
 	 if(uOut >0)
-		 {
-			 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
-			 __HAL_TIM_SetCompare(&htim3,TIM_CHANNEL_2,uOut);
+	 {
+		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
+		 __HAL_TIM_SetCompare(&htim3,TIM_CHANNEL_2,uOut);
 			 
-		 }
-		 else if(uOut <0)
-		 {
-			 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
-			 __HAL_TIM_SetCompare(&htim3,TIM_CHANNEL_2,uOut);
-			 
-		 }
-		 else
-		 {
-			 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
-			 __HAL_TIM_SetCompare(&htim3,TIM_CHANNEL_2,00);
-			  
-		 }
-}	
-	
+	}
+	else if(uOut <0)
+	{
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
+		__HAL_TIM_SetCompare(&htim3,TIM_CHANNEL_2,-uOut);	 
+	}
+	else
+	{
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_SET);
+		__HAL_TIM_SetCompare(&htim3,TIM_CHANNEL_2,00);	  
+	}
+}		
 /*
 * Function: HAL_UART_RxCpltCallback
 * Description: This function is used to communicate with RS232-USB, receive velocity value from GUI to calulate.
@@ -147,11 +140,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
                 run = true;
                 break;
             case 'b':
-//								reset();
-								break;
+//		reset();
+		break;
             case 'v':
                 DesiredSpeed = atoi(Rx_Buffer); //nhan tu C#, Pos = 10rpm
-								DesiredVel = DesiredSpeed*2*3.1415/60; //tuwf rpm sang rad/s
+		DesiredVel = DesiredSpeed*2*3.1415/60; //tuwf rpm sang rad/s
                 memset(Rx_Buffer, 0, sizeof(Rx_Buffer));
                 Rx_indx = 0;
                 break;    
@@ -172,7 +165,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
             default:
                 break;
         }
-				HAL_UART_Receive_IT(&huart1,(uint8_t*)Rx_data,1);
+		HAL_UART_Receive_IT(&huart1,(uint8_t*)Rx_data,1);
 		}
 	}
 
@@ -191,23 +184,23 @@ unsigned char State0;
 	State0 = (State0<<1) | HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
 	State0 = State0&0x03;
 	switch (State0) {
-		case 0:
-			if(PreviousState==1) CountValue++;
-			else CountValue--;
+	case 0:
+		if(PreviousState==1) CountValue++;
+		else CountValue--;
 		break;
-		case 1:
-			if(PreviousState==3) CountValue++;
-			else CountValue--;
+	case 1:
+		if(PreviousState==3) CountValue++;
+		else CountValue--;
 		break;
-		case 2:
-			if(PreviousState==0) CountValue++;
-			else CountValue--;
+	case 2:
+		if(PreviousState==0) CountValue++;
+		else CountValue--;
 		break;
-		case 3:
-			if(PreviousState==2) CountValue++;
-			else CountValue--;
+	case 3:
+		if(PreviousState==2) CountValue++;
+		else CountValue--;
 		break;
-		}
+	}
 	PreviousState = State0;
 	CntVel++;
 	if (CountValue>=2000) {
@@ -240,23 +233,23 @@ unsigned char State1;
 	State1 = (State1<<1) | HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
 	State1 = State1&0x03;
 	switch (State1) {
-		case 0:
-			if(PreviousState==1) CountValue++;
-			else CountValue--;
+	case 0:
+		if(PreviousState==1) CountValue++;
+		else CountValue--;
 		break;
-		case 1:
-			if(PreviousState==3) CountValue++;
-			else CountValue--;
+	case 1:
+		if(PreviousState==3) CountValue++;
+		else CountValue--;
 		break;
-		case 2:
-			if(PreviousState==0) CountValue++;
-			else CountValue--;
+	case 2:
+		if(PreviousState==0) CountValue++;
+		else CountValue--;
 		break;
-		case 3:
-			if(PreviousState==2) CountValue++;
-			else CountValue--;
+	case 3:
+		if(PreviousState==2) CountValue++;
+		else CountValue--;
 		break;
-		}
+	}
 	PreviousState = State1;
 	CntVel++;
 	if (CountValue>=2000) {
@@ -271,8 +264,6 @@ unsigned char State1;
 
   /* USER CODE END EXTI3_IRQn 1 */
 }
-
-
 /*
 * Function: HAL_TIM_PeriodElapsedCallback
 * Description: This function is used to caculate velocity and plot velocity of motor on uart
